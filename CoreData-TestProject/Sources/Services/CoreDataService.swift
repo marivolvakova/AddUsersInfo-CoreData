@@ -6,6 +6,7 @@
 //
 import CoreData
 
+// MARK: - CoreDataProtocol
 
 protocol CoreDataProtocol: AnyObject {
 
@@ -16,6 +17,8 @@ protocol CoreDataProtocol: AnyObject {
     func deleteUser(user: User)
     func saveDetailedInfo(user: User, newName: String?, newCityName: String?, newDateOfBirth: String?, newPhoneNumber: String?, newPhoto: Data?)
 }
+
+// MARK: - CoreDataService
 
 class CoreDataService: CoreDataProtocol{
     

@@ -23,6 +23,7 @@
 		D6A4316928B590F50048D7A0 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4316828B590F50048D7A0 /* Router.swift */; };
 		D6A4316B28B596D80048D7A0 /* DetailedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4316A28B596D80048D7A0 /* DetailedPresenter.swift */; };
 		D6A4316D28B597A30048D7A0 /* DetailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4316C28B597A30048D7A0 /* DetailedView.swift */; };
+		D6D9E5EC28B6B8D500B41F68 /* TextField+Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D9E5EB28B6B8D500B41F68 /* TextField+Date+String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		D6A4316828B590F50048D7A0 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		D6A4316A28B596D80048D7A0 /* DetailedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedPresenter.swift; sourceTree = "<group>"; };
 		D6A4316C28B597A30048D7A0 /* DetailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedView.swift; sourceTree = "<group>"; };
+		D6D9E5EB28B6B8D500B41F68 /* TextField+Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextField+Date+String.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,8 @@
 		D6A4312B28B431310048D7A0 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				D6D9E5EF28B6BC2B00B41F68 /* Router */,
+				D6D9E5EE28B6BC2300B41F68 /* Assambly */,
 				D6A4312C28B4313B0048D7A0 /* App */,
 				D6A4312D28B431560048D7A0 /* Services */,
 				D6A4312E28B431640048D7A0 /* Scenes */,
@@ -108,8 +112,6 @@
 			children = (
 				D6A4311328B42F230048D7A0 /* AppDelegate.swift */,
 				D6A4311528B42F230048D7A0 /* SceneDelegate.swift */,
-				D6A4316628B590C80048D7A0 /* AssemblyModule.swift */,
-				D6A4316828B590F50048D7A0 /* Router.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -118,8 +120,6 @@
 			isa = PBXGroup;
 			children = (
 				D6A4313628B432190048D7A0 /* CoreDataService.swift */,
-				D6A4311C28B42F230048D7A0 /* Users.xcdatamodeld */,
-				D6A4313928B432BF0048D7A0 /* User+CoreDataProperties.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -136,6 +136,7 @@
 		D6A4312F28B431840048D7A0 /* UsersModule */ = {
 			isa = PBXGroup;
 			children = (
+				D6D9E5ED28B6B9CA00B41F68 /* Model */,
 				D6A4313528B431E20048D7A0 /* Presenter */,
 				D6A4313428B431DB0048D7A0 /* View */,
 			);
@@ -145,6 +146,7 @@
 		D6A4313028B4318D0048D7A0 /* DetailModule */ = {
 			isa = PBXGroup;
 			children = (
+				D6D9E5EA28B6B8B300B41F68 /* Extensions */,
 				D6A4313328B431CF0048D7A0 /* Presenter */,
 				D6A4313228B431CA0048D7A0 /* View */,
 			);
@@ -183,6 +185,39 @@
 				D6A4314028B4427C0048D7A0 /* UsersPresenter.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		D6D9E5EA28B6B8B300B41F68 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D6D9E5EB28B6B8D500B41F68 /* TextField+Date+String.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D6D9E5ED28B6B9CA00B41F68 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D6A4311C28B42F230048D7A0 /* Users.xcdatamodeld */,
+				D6A4313928B432BF0048D7A0 /* User+CoreDataProperties.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D6D9E5EE28B6BC2300B41F68 /* Assambly */ = {
+			isa = PBXGroup;
+			children = (
+				D6A4316628B590C80048D7A0 /* AssemblyModule.swift */,
+			);
+			path = Assambly;
+			sourceTree = "<group>";
+		};
+		D6D9E5EF28B6BC2B00B41F68 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				D6A4316828B590F50048D7A0 /* Router.swift */,
+			);
+			path = Router;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,6 +302,7 @@
 				D6A4316D28B597A30048D7A0 /* DetailedView.swift in Sources */,
 				D6A4314128B4427C0048D7A0 /* UsersPresenter.swift in Sources */,
 				D6A4316728B590C80048D7A0 /* AssemblyModule.swift in Sources */,
+				D6D9E5EC28B6B8D500B41F68 /* TextField+Date+String.swift in Sources */,
 				D6A4313F28B440EA0048D7A0 /* UsersView.swift in Sources */,
 				D6A4311428B42F230048D7A0 /* AppDelegate.swift in Sources */,
 				D6A4311E28B42F230048D7A0 /* Users.xcdatamodeld in Sources */,

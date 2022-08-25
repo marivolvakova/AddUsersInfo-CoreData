@@ -7,11 +7,13 @@
 
 import UIKit
 
+// MARK: - DetailedViewProtocol
 
 protocol DetailedViewProtocol: AnyObject {
     func loadUserInfoFromCoredata()
 }
 
+// MARK: - DetailedPresenterProtocol
 
 protocol DetailedPresenterProtocol: AnyObject {
     var userInfo: User? { get set }
@@ -22,8 +24,10 @@ protocol DetailedPresenterProtocol: AnyObject {
     func saveUserInfoInCoreData(user: User, newName: String?, newCityName: String?, newDateOfBirth: String?, newPhoneNumber: String?, newPhoto: Data?)
 }
 
+// MARK: - DetailedPresenter
 
 class DetailedPresenter: DetailedPresenterProtocol {
+    
     // MARK: - Properties
 
     var userInfo: User?
@@ -41,18 +45,17 @@ class DetailedPresenter: DetailedPresenterProtocol {
         self.userInfo = user
     }
         
-        // MARK: - Functions
+    // MARK: - Functions
         
-        func getUserInfo() {
-            view?.loadUserInfoFromCoredata()
-        }
+    func getUserInfo() {
+        view?.loadUserInfoFromCoredata()
+    }
         
-        func saveUserInfoInCoreData(user: User, newName: String?, newCityName: String?, newDateOfBirth: String?, newPhoneNumber: String?, newPhoto: Data?) {
-            
-            coreDataService.saveDetailedInfo(user: user, newName: newName, newCityName: newCityName, newDateOfBirth: newDateOfBirth, newPhoneNumber: newPhoneNumber, newPhoto: newPhoto)
-        }
+    func saveUserInfoInCoreData(user: User, newName: String?, newCityName: String?, newDateOfBirth: String?, newPhoneNumber: String?, newPhoto: Data?) {
+        coreDataService.saveDetailedInfo(user: user, newName: newName, newCityName: newCityName, newDateOfBirth: newDateOfBirth, newPhoneNumber: newPhoneNumber, newPhoto: newPhoto)
+    }
         
-        func backButtonTapped() {
-            router?.popToRoot()
-        }
+    func backButtonTapped() {
+        router?.popToRoot()
+    }
 }

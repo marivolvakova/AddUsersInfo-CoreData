@@ -33,8 +33,9 @@ class UsersViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         fetchTableView()
-        
     }
+    
+    // MARK: - Setup functions
     
     private func setupView() {
         
@@ -43,7 +44,6 @@ class UsersViewController: UIViewController {
         usersView?.tableView.delegate = self
         usersView?.tableView.dataSource = self
         usersView?.tableView.keyboardDismissMode = .onDrag
-        usersView?.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         
         usersView?.textField.delegate = self
@@ -55,17 +55,17 @@ class UsersViewController: UIViewController {
                                     for: .touchUpInside)
     }
     
-    
+    // MARK: - Functions
     
     func showAlert(message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
-    
 }
 
-// MARK: - Functions
+    // MARK: - UsersViewProtocol
+
 extension UsersViewController: UsersViewProtocol {
     @objc func addNewUserButtonAction() {
         guard let newUser = usersView?.textField.text else { return }
@@ -83,12 +83,11 @@ extension UsersViewController: UsersViewProtocol {
     func fetchTableView() {
         DispatchQueue.main.async {
             self.usersView?.tableView.reloadData()
-            self.fetchTableView()
         }
     }
 }
 
-// MARK: - UITableViewDataSource, UITableViewDelegate
+    // MARK: - TableViewDataSource, TableViewDelegate
 
 extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -96,33 +95,38 @@ extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = CoreDataService.sharedManager.users?[indexPath.row].name
+        let currentUser = CoreDataService.sharedManager.users?[indexPath.row]
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: "Cell")
+        cell.textLabel?.text = currentUser?.name
+        cell.detailTextLabel?.text = currentUser?.cityName
         cell.accessoryType = .disclosureIndicator
         return cell
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let selectedUser = CoreDataService.sharedManager.users?[indexPath.row] else { return nil }
+        
         let delete = UIContextualAction(style: .destructive,
                                         title: "Delete") { [weak self] (action,
-                                                                        swipeButtonView,
-                                                                        completion)  in
+                                                                        view,
+                                                                        completionHandler)  in
+            guard let selectedUser = CoreDataService.sharedManager.users?[indexPath.row] else { return }
             self?.presenter?.deleteUser(user: selectedUser)
             self?.usersView?.tableView.deleteRows(at: [indexPath], with: .automatic)
             self?.showAlert(message: "User deleted")
+        completionHandler(true)
         }
-        let swipeActions = UISwipeActionsConfiguration(actions: [delete])
-        return swipeActions
+        let configuration = UISwipeActionsConfiguration(actions: [delete])
+        return configuration
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let selectedUser = CoreDataService.sharedManager.users?[indexPath.row] else { return }
+        let selectedUser = CoreDataService.sharedManager.users?[indexPath.row]
         presenter.selectedUser(user: selectedUser)
     }
 }
 
+    // MARK: - TextFieldDelegate
 
 extension UsersViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

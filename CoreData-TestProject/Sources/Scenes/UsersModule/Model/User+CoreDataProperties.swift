@@ -14,8 +14,6 @@ import UIKit
 
 @objc(User)
 public class User: NSManagedObject {
-    
-
     @NSManaged public var name: String?
     @NSManaged public var dateOfBirth: Date?
     @NSManaged public var cityName: String?

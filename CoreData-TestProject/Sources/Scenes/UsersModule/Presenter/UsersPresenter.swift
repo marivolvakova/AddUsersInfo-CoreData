@@ -25,6 +25,8 @@ protocol UsersPresenterProtocol: AnyObject {
     func selectedUser(user: User?)
 }
 
+// MARK: - UsersPresenter
+
 class UsersPresenter: UsersPresenterProtocol {
 
     // MARK: - Properties

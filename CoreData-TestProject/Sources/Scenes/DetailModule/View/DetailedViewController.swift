@@ -8,22 +8,29 @@
 import UIKit
 import CoreData
 
-class DetailedViewController: UIViewController, UITextFieldDelegate {
+class DetailedViewController: UIViewController {
     
     // MARK: - Properties
     
     var userInfo: User?
     var viewIsEditing = false
-    
-    
     var presenter: DetailedPresenterProtocol!
-    
-    lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnImage))
     
     private var detailedView: DetailedView? {
         guard isViewLoaded else { return nil }
         return view as? DetailedView
     }
+    
+    lazy var imagePickerAlert: UIAlertController = {
+        let imagePickerAlert = UIAlertController (title: "Загрузить", message: nil, preferredStyle: .actionSheet)
+        let actionCancel = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        let actionPhoto = UIAlertAction(title: "Из фотогалереи", style: .default) { (alert) in
+            self.present(self.detailedView?.imagePicker ?? UIImagePickerController(), animated: true, completion: nil)
+        }
+        imagePickerAlert.addAction(actionCancel)
+        imagePickerAlert.addAction(actionPhoto)
+        return imagePickerAlert
+    }()
     
     // MARK: - Lifecycle
     
@@ -37,22 +44,21 @@ class DetailedViewController: UIViewController, UITextFieldDelegate {
         presenter.getUserInfo()
     }
     
-    // MARK: - Private functions
+    // MARK: - Setup functions
     
     func setupView() {
         setupDelegate()
-         
+        
+        ///Actions for date of birth textField
         detailedView?.dateOfBirthTextField.datePicker(target: self,
                                                   doneAction: #selector(doneAction),
                                                   cancelAction: #selector(cancelAction))
-        
-        
+        ///Action for edit button
         detailedView?.editButton.addTarget(self,
                                            action: #selector(editButtonAction),
-                                           for: .touchUpInside)
-        
-        detailedView?.photoImage.addGestureRecognizer(tapGesture)
-
+                                        for: .touchUpInside)
+        ///Tap gesture for image selecting
+        createTapGesture()
     }
     
     func setupDelegate() {
@@ -64,19 +70,31 @@ class DetailedViewController: UIViewController, UITextFieldDelegate {
         detailedView?.phoneNumberTextField.delegate = self
     }
     
-
-    func setupImagePickerAlert() -> UIAlertController {
-        let imagePickerAlert = UIAlertController (title: "Загрузить", message: nil, preferredStyle: .actionSheet)
-        
-        let actionCancel = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-        
-        let actionPhoto = UIAlertAction(title: "С фотогалереи", style: .default) { (alert) in
-            self.present(self.detailedView?.imagePicker ?? UIImagePickerController(), animated: true, completion: nil)
-        }
-        imagePickerAlert.addAction(actionCancel)
-        imagePickerAlert.addAction(actionPhoto)
-
-        return imagePickerAlert
+    func createTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnImage))
+        detailedView?.photoImage.addGestureRecognizer(tapGesture)
+    }
+    
+    // MARK: - Functions
+    
+    func editSaveViewSetup() {
+        view.backgroundColor = (viewIsEditing == true) ? .lightGray : .systemGroupedBackground
+        detailedView?.editButton.setTitle((viewIsEditing == true) ? "Save information" : "Edit information", for: .normal)
+        detailedView?.editButton.backgroundColor = (viewIsEditing == true) ? .darkGray : .systemBlue
+        detailedView?.changePhotoLable.isHidden = (viewIsEditing == true) ? false : true
+        detailedView?.photoImage.isUserInteractionEnabled = (viewIsEditing == true) ? true : false
+    }
+    
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: - @objc functions
+    
+    @objc func tapOnImage(_ sender: UITapGestureRecognizer) {
+        present(imagePickerAlert, animated: true, completion: nil)
     }
     
     ///datePicker actions
@@ -91,26 +109,12 @@ class DetailedViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @objc func tapOnImage() {
-        present(detailedView?.imagePicker ?? UIImagePickerController(), animated: true, completion: nil)
-        present(setupImagePickerAlert(), animated: true, completion: nil)
-    }
-    
-    func editingViewSetup() {
-        view.backgroundColor = (viewIsEditing == true) ? .lightGray : .systemGroupedBackground
-        detailedView?.editButton.setTitle((viewIsEditing == true) ? "Save information" : "Edit information", for: .normal)
-        detailedView?.editButton.backgroundColor = (viewIsEditing == true) ? .darkGray : .systemBlue
-        detailedView?.changePhotoLable.isHidden = (viewIsEditing == true) ? false : true
-        detailedView?.photoImage.isUserInteractionEnabled = (viewIsEditing == true) ? true : false
-    }
-    
     @objc func editButtonAction() {
         viewIsEditing = true
-        editingViewSetup()
+        editSaveViewSetup()
         detailedView?.editButton.addTarget(self,
                                            action: #selector(saveButtonAction),
                                            for: .touchUpInside)
-        
     }
     
     @objc func saveButtonAction() {
@@ -121,12 +125,11 @@ class DetailedViewController: UIViewController, UITextFieldDelegate {
         
         let userInfoPhoto = detailedView?.photoImage.image?.jpegData(compressionQuality: 1)
         
-        ///Если строка имени пустая - не сохранять запись и показать алерт
         if (detailedView?.nameTextField.text!.isEmpty)! {
             showAlert(message: "Data has not been saved, because the name field is empty!")
         } else {
             viewIsEditing = false
-            editingViewSetup()
+            editSaveViewSetup()
             detailedView?.editButton.addTarget(self,
                                                action: #selector(editButtonAction),
                                                for: .touchUpInside)
@@ -138,17 +141,17 @@ class DetailedViewController: UIViewController, UITextFieldDelegate {
                                              newPhoto: userInfoPhoto)
         }
     }
-
-func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-    return viewIsEditing == true ? true : false
 }
 
-func showAlert(message: String) {
-    let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-    present(alert, animated: true, completion: nil)
+    // MARK: - TextFieldDelegate
+
+extension DetailedViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return viewIsEditing == true ? true : false
+    }
 }
-}
+
+    // MARK: - DetailedViewProtocol
 
 extension DetailedViewController: DetailedViewProtocol {
     func loadUserInfoFromCoredata() {
@@ -158,95 +161,29 @@ extension DetailedViewController: DetailedViewProtocol {
         detailedView?.cityNameTextField.text = presenter.userInfo?.cityName
         detailedView?.phoneNumberTextField.text = presenter.userInfo?.phoneNumber
         ///Photo image
-        detailedView?.photoImage.image = UIImage(data: presenter.userInfo?.photo ?? Data())
-    }
-}
-
-
-extension UITextField {
-    func datePicker<T>(target: T,
-                       doneAction: Selector,
-                       cancelAction: Selector) {
-        let screenWidth = UIScreen.main.bounds.width
-        
-        func buttonItem(withSystemItemStyle style: UIBarButtonItem.SystemItem) -> UIBarButtonItem {
-            let buttonTarget = style == .flexibleSpace ? nil : target
-            let action: Selector? = {
-                switch style {
-                case .cancel:
-                    return cancelAction
-                case .done:
-                    return doneAction
-                default:
-                    return nil
-                }
-            }()
-            
-            let barButtonItem = UIBarButtonItem(barButtonSystemItem: style,
-                                                target: buttonTarget,
-                                                action: action)
-            
-            return barButtonItem
+        if let imageData = presenter.userInfo?.photo {
+            detailedView?.photoImage.image = UIImage(data: imageData)
         }
-        
-        let datePicker = UIDatePicker(frame: CGRect(x: 0,
-                                                    y: 0,
-                                                    width: screenWidth,
-                                                    height: 300))
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .wheels
-        
-        let localeID = Locale.preferredLanguages.first
-        datePicker.locale = Locale(identifier: localeID!)
-        self.inputView = datePicker
-        
-        let toolBar = UIToolbar(frame: CGRect(x: 0,
-                                              y: 0,
-                                              width: screenWidth,
-                                              height: 44))
-        toolBar.setItems([buttonItem(withSystemItemStyle: .cancel),
-                          buttonItem(withSystemItemStyle: .flexibleSpace),
-                          buttonItem(withSystemItemStyle: .done)],
-                         animated: true)
-        self.inputAccessoryView = toolBar
     }
-    
-    
 }
 
+    // MARK: - ImagePickerControllerDelegate
 
-extension DetailedViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+extension DetailedViewController: UIImagePickerControllerDelegate  {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
         detailedView?.imagePicker.dismiss(animated: true)
-        
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             detailedView?.photoImage.image = pickedImage
         }
     }
-    
+}
+
+    // MARK: - NavigationControllerDelegate
+extension DetailedViewController: UINavigationControllerDelegate{
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         detailedView?.imagePicker.dismiss(animated: true)
     }
 }
 
 
-extension Date {
-    public func convertToString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        return formatter.string(from: self)
-    }
-}
 
-
-extension String {
-
-    public func convertToDate() -> Date? {
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        return dateFormatter.date(from: self)
-    }
-}

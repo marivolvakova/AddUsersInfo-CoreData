@@ -29,6 +29,7 @@ class DetailedView: UIView {
         photoImage.clipsToBounds = true
         photoImage.backgroundColor = .darkGray
         photoImage.isUserInteractionEnabled = false
+        photoImage.image = UIImage(named: "noImage")
         return photoImage
     }()
     
@@ -54,9 +55,6 @@ class DetailedView: UIView {
         lable.clipsToBounds = true
         return lable
     }()
-    
-    
-
     
     lazy var nameTextField = createTextField(placeholder: "Your name")
     lazy var dateOfBirthTextField = createTextField(placeholder: "Your date of birth")
@@ -104,8 +102,8 @@ class DetailedView: UIView {
     // MARK: - Settings
     
     func setupHierarchy() {
-        self.addSubview(photoImage)
         self.addSubview(changePhotoLable)
+        self.addSubview(photoImage)
         self.addSubview(nameTextField)
         self.addSubview(dateOfBirthTextField)
         self.addSubview(cityNameTextField)
@@ -116,14 +114,12 @@ class DetailedView: UIView {
     func setupLayout() {
         NSLayoutConstraint.activate([
             
-            photoImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
-            photoImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            
-            changePhotoLable.bottomAnchor.constraint(equalTo: photoImage.topAnchor, constant: -10),
+            changePhotoLable.bottomAnchor.constraint(equalTo: photoImage.topAnchor, constant: -5),
             changePhotoLable.centerXAnchor.constraint(equalTo: photoImage.centerXAnchor),
-            changePhotoLable.widthAnchor.constraint(equalTo: nameTextField.widthAnchor),
-            changePhotoLable.heightAnchor.constraint(equalToConstant: 20),
             
+            photoImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 5),
+            photoImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        
             nameTextField.topAnchor.constraint(equalTo: photoImage.bottomAnchor, constant: 20),
             nameTextField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 40),
             nameTextField.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -40),
@@ -140,7 +136,7 @@ class DetailedView: UIView {
             phoneNumberTextField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 40),
             phoneNumberTextField.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -40),
             
-            editButton.topAnchor.constraint(equalTo: phoneNumberTextField.bottomAnchor, constant: 30),
+            editButton.topAnchor.constraint(equalTo: phoneNumberTextField.bottomAnchor, constant: 20),
             editButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -40),
             editButton.centerXAnchor.constraint(equalTo: phoneNumberTextField.centerXAnchor),
             editButton.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 40)
