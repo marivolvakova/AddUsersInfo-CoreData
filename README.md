@@ -1,10 +1,10 @@
-# AddUsersInfo-CoreData
+# TableUsersInfo
 
 Приложение-табличка с возможностью занесения данных о пользователях. 
 Сохранение данных в CoreData, редактирования полей по нажатию на кнопку.
 DatePicker, ImagePicker с выбором из фотогаллереи.
 Удаление пользователя по свайпу.
-
+Реализован на архитектуре MVP + assambly + router.
 
 
 <img width="520" alt="Снимок экрана 2022-11-07 в 19 31 17" src="https://user-images.githubusercontent.com/104025325/200367020-570440d4-c9f9-40ef-b626-15e3bafe364a.png">
